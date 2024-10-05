@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Panier</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: #333;
+        }
+        
+        h1 {
+            color: #3498db; /* Couleur du titre */
+            margin-bottom: 20px;
+        }
+
+        #cart {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        #cart-items {
+            margin-bottom: 10px;
+        }
+
+        .cart-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item:hover {
+            background-color: #e9e9e9; /* Change background color on hover */
+        }
+
+        #contact-info {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%;
+            max-width: 300px;
+            margin-top: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        button:hover {
+            background-color: #2980b9; /* Couleur du bouton au survol */
+        }
+
+        #cart-total {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Votre Panier</h1>
+    <div id="cart">
+        <h2>Articles ajoutés</h2>
+        <div id="cart-items"></div>
+        <div id="cart-total">
+            <strong>Total: </strong><span id="total-price">0</span> €
+        </div>
+        <div id="contact-info">
+            <label for="contact">Votre numéro WhatsApp ou Gmail :</label><br>
+            <input type="text" id="contact" placeholder="Entrez votre numéro ou email" required>
+        </div>
+        <button onclick="order()">Commander</button>
+    </div>
+
+    <script>
+        // Récupérer le panier depuis le localStorage
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalPrice = localStorage.getItem('totalPrice') || 0;
+
+        // Afficher les articles du panier
+        const cartItems = document.getElementById('cart-items');
+        if (cart.length === 0) {
+            cartItems.innerHTML = '<p>Aucun article dans le panier</p>';
+        } else {
+            cart.forEach(item => {
+                cartItems.innerHTML += `<div class="cart-item">${item.product} - ${item.price}€</div>`;
+            });
+        }
+        document.getElementById('total-price').innerText = totalPrice; // Mettre à jour le prix total
+
+        // Fonction pour commander
+        function order() {
+            const contact = document.getElementById('contact').value; // Récupérer le numéro ou email
+            if (!contact) {
+                alert("Veuillez entrer votre numéro WhatsApp ou Gmail."); // Alerte si le champ est vide
+                return;
+            }
+
+            // Enregistrer la commande dans le localStorage
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.push({ items: cart, total: totalPrice, contact: contact });
+            localStorage.setItem('orders', JSON.stringify(orders));
+
+            // Afficher un message de confirmation
+            alert(`Commande réussie !\nTotal : ${totalPrice}€\nContact : ${contact}`);
+            
+            // Effacer le panier après la commande réussie
+            localStorage.removeItem('cart');
+            localStorage.removeItem('totalPrice');
+
+            // Optionnel : Réinitialiser l'affichage
+            cartItems.innerHTML = '<p>Aucun article dans le panier</p>';
+            document.getElementById('total-price').innerText = '0'; // Réinitialiser le total
+            document.getElementById('contact').value = ''; // Réinitialiser le champ de contact
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url(image/p1.jpg); /* Chemin vers l'image d'arrière-plan */
+        background-size: cover;
+        background-position: center;
+        color: rgb(116, 39, 39);
+    }
+    
+    
+
