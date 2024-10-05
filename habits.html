@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">                                                                                           
+    <title>Galerie</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 20px;
+            font-size: 2.5rem;
+        }
+
+        .product {
+            display: inline-block;
+            text-align: center;
+            margin: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 220px;
+            transition: transform 0.2s ease;
+        }
+
+        .product:hover {
+            transform: scale(1.05);
+        }
+
+        .product img {
+            width: 200px;
+            height: 200px;
+            border-radius: 5px;
+        }
+
+        .product h2 {
+            font-size: 1.5rem;
+            color: #333;
+            margin-top: 10px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            font-size: 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #cart {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        #cart h2 {
+            color: #333;
+            font-size: 1.8rem;
+        }
+
+        #cart-items {
+            margin-bottom: 10px;
+        }
+
+        .cart-item {
+            font-size: 1.2rem;
+            color: #333;
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        #cart-total {
+            font-size: 1.5rem;
+            margin-top: 15px;
+        }
+
+        #total-price {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        #checkout-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #checkout-btn:hover {
+            background-color: #2980b9;
+        }
+
+        /* Bouton Marcio */
+        #marcio-btn {
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #marcio-btn:hover {
+            background-color: #71368a;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Galerie</h1>
+
+    <div id="product-container"></div>
+
+    <div id="cart">
+        <h2>Panier</h2>
+        <div id="cart-items">
+            <p>Aucun article dans le panier</p>
+        </div>
+        <div id="cart-total">
+            <strong>Total: </strong><span id="total-price">0</span> €
+        </div>
+        <button id="checkout-btn" onclick="goToCheckout()">Voir le panier</button>
+        <!-- Bouton Marcio -->
+        <button id="marcio-btn" onclick="goToMarcio()">Marcio</button>
+    </div>
+
+    <script>
+        let cart = []; // Stocke les articles dans le panier
+        let totalPrice = 0; // Total des prix
+        const correctPassword = "policeDE2003"; // Remplacez par le mot de passe souhaité
+
+        // Fonction pour afficher les produits à partir du LocalStorage
+        function displayProducts() {
+            const products = JSON.parse(localStorage.getItem('products')) || [];
+            const productContainer = document.getElementById('product-container');
+
+            // Vider le conteneur avant d'afficher les produits
+            productContainer.innerHTML = '';
+
+            // Si aucun produit n'est disponible
+            if (products.length === 0) {
+                productContainer.innerHTML = '<p>Aucun article disponible.</p>';
+                return;
+            }
+
+            // Afficher chaque produit
+            products.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product';
+                productDiv.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <h2>${product.name} - ${product.price}€</h2>
+                    <button onclick="addToCart('${product.name}', ${product.price})">Ajouter au panier</button>
+                `;
+                productContainer.appendChild(productDiv);
+            });
+        }
+
+        // Fonction pour ajouter un produit au panier
+        function addToCart(product, price) {
+            cart.push({ product, price }); // Ajouter l'article au panier
+            totalPrice += price; // Ajouter le prix au total
+            updateCart(); // Mettre à jour l'affichage du panier
+        }
+
+        // Fonction pour mettre à jour l'affichage du panier
+        function updateCart() {
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = ''; // Vider la section du panier pour la mettre à jour
+
+            // Si le panier est vide
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Aucun article dans le panier</p>';
+            } else {
+                cart.forEach(item => {
+                    cartItems.innerHTML += `<div class="cart-item">${item.product} - ${item.price}€</div>`;
+                });
+            }
+            document.getElementById('total-price').innerText = totalPrice; // Mettre à jour le prix total
+        }
+
+        // Fonction pour aller à la page du panier
+        function goToCheckout() {
+            localStorage.setItem('cart', JSON.stringify(cart)); // Enregistrer le panier dans le localStorage
+            localStorage.setItem('totalPrice', totalPrice); // Enregistrer le prix total dans le localStorage
+            window.location.href = 'checkout.html'; // Redirige vers la page de checkout
+        }
+
+        // Fonction pour rediriger vers la page Marcio
+        function goToMarcio() {
+            const password = prompt("Veillez saisir le mot de pass");
+            if (password === correctPassword) {
+                window.location.href = 'marcio.html'; // Redirige vers la page Marcio si le mot de passe est correct
+            } else {
+                alert("Mot de passe incorrect. Accès refusé."); // Alerte si le mot de passe est incorrect
+            }
+        }
+
+        // Appeler la fonction pour afficher les produits à chaque chargement de la page
+        displayProducts();
+    </script>
+</body>
+</html>

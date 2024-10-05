@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Articles - Marcio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+
+        .order {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #e7f3fe; /* Fond de la commande */
+            text-align: left;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #e74c3c;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestion des Articles</h1>
+
+    <!-- Section pour les messages -->
+    <div id="messages"></div>
+
+    <!-- Section pour les commandes -->
+    <h2>Commandes Passées</h2>
+    <div id="orders"></div>
+
+    <script>
+        // Fonction pour afficher les commandes
+        function displayOrders() {
+            const ordersContainer = document.getElementById('orders');
+            ordersContainer.innerHTML = ''; // Vider le contenu précédent
+
+            const orders = JSON.parse(localStorage.getItem('orders')) || []; // Récupérer les commandes
+
+            if (orders.length === 0) {
+                ordersContainer.innerHTML = '<p>Aucune commande passée.</p>';
+            } else {
+                orders.forEach((order, index) => {
+                    const orderDetails = order.items.map(item => `${item.product} - ${item.price}€`).join('<br>');
+                    ordersContainer.innerHTML += `
+                        <div class="order">
+                            <p><strong>Articles:</strong><br>${orderDetails}</p>
+                            <p><strong>Total:</strong> ${order.total}€</p>
+                            <p><strong>Contact:</strong> ${order.contact}</p>
+                            <button onclick="deleteOrder(${index})">Supprimer la commande</button>
+                            <hr>
+                        </div>`;
+                });
+            }
+        }
+
+        // Fonction pour supprimer une commande
+        function deleteOrder(index) {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            orders.splice(index, 1); // Supprimer la commande à l'index donné
+            localStorage.setItem('orders', JSON.stringify(orders)); // Mettre à jour le stockage local
+            displayOrders(); // Recharger les commandes
+        }
+
+        // Charger les commandes au chargement de la page
+        window.onload = function() {
+            displayOrders();
+        };
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Articles - Marcio</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        form {
+            margin: 20px 0;
+        }
+
+        input {
+            padding: 10px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #3498db;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        .message {
+            background-color: #e7f3fe; /* Couleur de fond bleu clair */
+            border-left: 6px solid #2196F3; /* Bordure gauche bleu */
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px; /* Coins arrondis */
+            color: #333; /* Couleur du texte */
+            font-weight: bold; /* Gras pour le texte */
+            text-align: left; /* Alignement du texte */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .delete-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+
+        #messages {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestion des Articles</h1>
+
+    <!-- Ajouter un article -->
+    <h2>Ajouter un article</h2>
+    <form onsubmit="event.preventDefault(); addArticle();">
+        <input type="text" id="article-name" placeholder="Nom de l'article" required>
+        <input type="file" id="article-image" accept="image/*" required>
+        <input type="number" id="article-price" placeholder="Prix de l'article" required>
+        <button type="submit">Ajouter l'article</button>
+    </form>
+
+    <!-- Retirer un article -->
+    <h2>Retirer un article</h2>
+    <form onsubmit="event.preventDefault(); removeArticle();">
+        <input type="text" id="remove-name" placeholder="Nom de l'article à retirer" required>
+        <button type="submit">Retirer l'article</button>
+    </form>
+
+    <!-- Section pour envoyer un message -->
+    
+
+    <script>
+        // Fonction pour ajouter un article
+        function addArticle() {
+            const name = document.getElementById('article-name').value;
+            const imageInput = document.getElementById('article-image');
+            const price = document.getElementById('article-price').value;
+
+            // Lire le fichier image sélectionné
+            const file = imageInput.files[0];
+            const reader = new FileReader();
+
+            reader.onloadend = function () {
+                const imageDataUrl = reader.result;
+
+                // Récupérer la liste d'articles depuis le LocalStorage
+                let products = JSON.parse(localStorage.getItem('products')) || [];
+
+                // Ajouter le nouvel article à la liste
+                products.push({ name, image: imageDataUrl, price });
+
+                // Enregistrer la liste mise à jour dans le LocalStorage
+                localStorage.setItem('products', JSON.stringify(products));
+
+                alert(`${name} a été ajouté à la galerie !`);
+            };
+
+            // Lire le fichier comme une URL de données
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Fonction pour retirer un article
+        function removeArticle() {
+            const articleName = document.getElementById('remove-name').value;
+
+            // Récupérer la liste d'articles depuis le LocalStorage
+            let products = JSON.parse(localStorage.getItem('products')) || [];
+
+            // Filtrer les articles pour retirer celui qui correspond au nom saisi
+            const updatedProducts = products.filter(product => product.name !== articleName);
+
+            // Enregistrer la nouvelle liste d'articles dans le LocalStorage
+            localStorage.setItem('products', JSON.stringify(updatedProducts));
+
+            alert(`${articleName} a été retiré de la galerie !`);
+        }
+
+        // Fonction pour envoyer un message
+        function sendMessage() {
+            const message = document.getElementById('message').value; // Récupérer le message
+            if (message.trim() === "") {
+                alert("Veuillez entrer un message valide.");
+                return;
+            }
+
+            // Récupérer la liste des messages depuis le LocalStorage
+            let messages = JSON.parse(localStorage.getItem('messages')) || [];
+
+            // Ajouter le message à la liste
+            messages.push(message);
+
+            // Enregistrer la liste mise à jour dans le LocalStorage
+            localStorage.setItem('messages', JSON.stringify(messages));
+
+            alert("Votre message a été envoyé !");
+            document.getElementById('message').value = ''; // Réinitialiser le champ
+
+            // Mettre à jour l'affichage des messages
+            displayMessages();
+        }
+
+        // Fonction pour afficher les messages
+        function displayMessages() {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = ''; // Vider le contenu précédent
+
+            const messages = JSON.parse(localStorage.getItem('messages')) || []; // Récupérer les messages
+
+            if (messages.length === 0) {
+                messagesContainer.innerHTML = '<p>Aucun message envoyé.</p>';
+            } else {
+                messages.forEach((msg, index) => {
+                    messagesContainer.innerHTML += `
+                        <div class="message">
+                            ${msg}
+                            <button class="delete-btn" onclick="deleteMessage(${index})">Supprimer</button>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        // Fonction pour supprimer un message
+        function deleteMessage(index) {
+            let messages = JSON.parse(localStorage.getItem('messages')) || []; // Récupérer les messages
+            messages.splice(index, 1); // Supprimer le message à l'index donné
+
+            localStorage.setItem('messages', JSON.stringify(messages)); // Enregistrer les messages mis à jour
+
+            displayMessages(); // Mettre à jour l'affichage des messages
+        }
+
+        // Appeler la fonction pour afficher les messages
+        displayMessages();
+    </script>
+</body>
+</html>
+
+
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+
+<script>
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCL0VrMAt9XNGgX1e0_HIEVC03teeOvqtY",
+  authDomain: "marciojardel-ce0d5.firebaseapp.com",
+  databaseURL: "https://marciojardel-ce0d5-default-rtdb.firebaseio.com",
+  projectId: "marciojardel-ce0d5",
+  storageBucket: "marciojardel-ce0d5.appspot.com",
+  messagingSenderId: "313912737797",
+  appId: "1:313912737797:web:7591bc125f19d480715c6c",
+  measurementId: "G-K9SZL6D4FR"
+};
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url(image/e1.jpg); /* Chemin vers l'image d'arrière-plan */
+        background-size: cover;
+        background-position: center;
+        color: rgb(5, 0, 0);
+    }
